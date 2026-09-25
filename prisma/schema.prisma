@@ -1,0 +1,207 @@
+generator client {
+  provider = "prisma-client"
+  output = "../src/generated/prisma"
+}
+datasource db {
+  provider = "postgresql"
+}
+model User {
+  id String @id @default(cuid())
+  email String @unique
+  passwordHash String
+  active Boolean @default(true)
+  sessions Session[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+model Session {
+  id String @id
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  @@index([userId])
+  @@index([expiresAt])
+}
+model LoginAttempt {
+  key String @id
+  count Int @default(0)
+  resetAt DateTime
+  @@index([resetAt])
+}
+model Category {
+  id String @id @default(cuid())
+  slug String @unique
+  seoTitleTr String @default("")
+  seoTitleAr String @default("")
+  seoDescriptionTr String @default("")
+  seoDescriptionAr String @default("")
+  nameTr String
+  nameAr String
+  descriptionTr String @default("")
+  descriptionAr String @default("")
+  image String @default("/images/botanical.webp")
+  sortOrder Int @default(0)
+  active Boolean @default(true)
+  parentId String?
+  parent Category? @relation("CategoryTree", fields: [parentId], references: [id], onDelete: Restrict)
+  children Category[] @relation("CategoryTree")
+  products Product[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([parentId, active, sortOrder])
+}
+model Product {
+  id String @id @default(cuid())
+  slug String @unique
+  sku String @unique
+  nameTr String
+  nameAr String
+  shortTr String
+  shortAr String
+  descriptionTr String
+  descriptionAr String
+  ingredientsTr String
+  ingredientsAr String
+  usageTr String
+  usageAr String
+  warningsTr String
+  warningsAr String
+  featuresTr String @default("")
+  featuresAr String @default("")
+  seoTitleTr String @default("")
+  seoTitleAr String @default("")
+  seoDescriptionTr String @default("")
+  seoDescriptionAr String @default("")
+  price Int
+  oldPrice Int?
+  size String
+  stock Int @default(0)
+  featured Boolean @default(false)
+  isNew Boolean @default(false)
+  bestSeller Boolean @default(false)
+  active Boolean @default(false)
+  archived Boolean @default(false)
+  categoryId String
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  images ProductImage[]
+  tags Tag[]
+  collections Collection[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([categoryId, active, archived])
+  @@index([active, archived, featured])
+  @@index([active, archived, bestSeller])
+  @@index([createdAt])
+  @@index([nameTr])
+  @@index([nameAr])
+}
+model ProductImage {
+  id String @id @default(cuid())
+  productId String
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url String
+  altTr String
+  altAr String
+  sortOrder Int @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([productId, sortOrder])
+}
+model Tag {
+  id String @id @default(cuid())
+  slug String @unique
+  nameTr String
+  nameAr String
+  active Boolean @default(true)
+  sortOrder Int @default(0)
+  products Product[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+model Collection {
+  id String @id @default(cuid())
+  slug String @unique
+  nameTr String
+  nameAr String
+  descriptionTr String @default("")
+  descriptionAr String @default("")
+  active Boolean @default(true)
+  sortOrder Int @default(0)
+  products Product[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+model HeroSlide {
+  id String @id @default(cuid())
+  titleTr String
+  titleAr String
+  descriptionTr String
+  descriptionAr String
+  ctaTr String
+  ctaAr String
+  url String
+  desktopImage String
+  mobileImage String
+  sortOrder Int @default(0)
+  active Boolean @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([active, sortOrder])
+}
+model Article {
+  id String @id @default(cuid())
+  slug String @unique
+  seoTitleTr String @default("")
+  seoTitleAr String @default("")
+  seoDescriptionTr String @default("")
+  seoDescriptionAr String @default("")
+  titleTr String
+  titleAr String
+  excerptTr String
+  excerptAr String
+  bodyTr String
+  bodyAr String
+  image String
+  author String @default("NARANJ")
+  active Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([active, createdAt])
+}
+model SiteSettings {
+  id String @id @default("main")
+  whatsapp String @default("")
+  email String @default("")
+  phone String @default("")
+  addressTr String @default("")
+  addressAr String @default("")
+  instagram String @default("")
+  facebook String @default("")
+  announcementTr String @default("")
+  announcementAr String @default("")
+  seoTitleTr String @default("NARANJ | Doğadan gelen bakım")
+  seoTitleAr String @default("نارنج | العناية المستوحاة من الطبيعة")
+  seoDescriptionTr String @default("Doğal yağlar, bitkisel bakım ve günlük ritüeller. NARANJ koleksiyonunu keşfedin.")
+  seoDescriptionAr String @default("اكتشف الزيوت ومنتجات العناية والروتين اليومي في مجموعة نارنج.")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+model Page {
+  id String @id @default(cuid())
+  slug String @unique
+  titleTr String
+  titleAr String
+  bodyTr String
+  bodyAr String
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+}
+model SlugRedirect {
+  id String @id @default(cuid())
+  kind String
+  oldSlug String
+  newSlug String
+  createdAt DateTime @default(now())
+  @@unique([kind, oldSlug])
+}

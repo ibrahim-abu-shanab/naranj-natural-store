@@ -1,0 +1,19 @@
+node_modules/
+.next/
+.env*
+!.env.example
+src/generated/
+*.tsbuildinfo
+public/uploads/
+test-results/
+playwright-report/
+.test-db/
+.local-db/
+.test-runtime/
+artifacts/
+
+# Local debugging / admin utilities
+check-password.ts
+reset-password.ts
+test-db.ts
+project-info.txt
