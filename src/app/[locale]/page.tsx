@@ -14,7 +14,6 @@ import {
   getCollections,
 } from "@/lib/catalog";
 import { dictionary, isLocale, localized } from "@/lib/i18n";
-import { publicCategories, publicCategoryName } from "@/lib/public-categories";
 import { metadata, siteUrl } from "@/lib/seo";
 
 type Props = { params: Promise<{ locale: string }> };
@@ -108,11 +107,7 @@ export default async function Home({ params }: Props) {
           <h2>{d.exploreCategories}</h2>
         </div>
         <div className="home-category-grid">
-          {publicCategories.map((category) => {
-            const source = roots.find(({ slug }) =>
-              category.roots.some((root) => root === slug),
-            );
-            if (!source) return null;
+          {roots.map((category) => {
             return (
               <Link
                 href={`/${locale}/categories/${category.slug}`}
@@ -120,14 +115,14 @@ export default async function Home({ params }: Props) {
               >
                 <span className="home-category-image">
                   <Image
-                    src={source.image}
+                    src={category.image}
                     alt=""
                     fill
                     sizes="(max-width: 760px) 45vw, 20vw"
                   />
                 </span>
                 <span>
-                  {publicCategoryName(category, locale)}
+                  {localized(category, "name", locale)}
                   <ArrowUpRight size={17} />
                 </span>
               </Link>

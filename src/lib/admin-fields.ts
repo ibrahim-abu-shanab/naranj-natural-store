@@ -219,7 +219,7 @@ export const fields: Record<keyof typeof resourceLabels, Field[]> = {
   pages: [
     { key: "titleTr", label: "العنوان بالتركية", required: true },
     { key: "titleAr", label: "العنوان بالعربية", required: true },
-    slug,
+    { ...slug, label: "الرابط المختصر (مثل about أو contact أو our-story)" },
     {
       key: "bodyTr",
       label: "المحتوى بالتركية",

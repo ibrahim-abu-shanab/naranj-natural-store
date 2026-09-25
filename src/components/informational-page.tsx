@@ -27,9 +27,9 @@ const pageIcons = {
 };
 
 function pairs(parts: string[]) {
-  return Array.from({ length: Math.floor(parts.length / 2) }, (_, index) => ({
+  return Array.from({ length: Math.ceil(parts.length / 2) }, (_, index) => ({
     title: parts[index * 2],
-    text: parts[index * 2 + 1],
+    text: parts[index * 2 + 1] ?? "",
   }));
 }
 
@@ -70,8 +70,7 @@ export function InformationalPage({
 
   const isAbout = slug === "about";
   const isPolicy = slug === "privacy" || slug === "terms";
-  const note =
-    slug === "shipping" || isPolicy ? (parts.at(-1) ?? "") : "";
+  const note = slug === "shipping" || isPolicy ? (parts.at(-1) ?? "") : "";
   const intro = isPolicy ? parts[0] : "";
   const content = isAbout
     ? parts.slice(2)
@@ -104,7 +103,9 @@ export function InformationalPage({
                   <span className="info-card-icon">
                     <Icon
                       aria-hidden="true"
-                      className={Icon === Truck ? "shipping-truck-icon" : undefined}
+                      className={
+                        Icon === Truck ? "shipping-truck-icon" : undefined
+                      }
                     />
                   </span>
                   <h2>{item.title}</h2>

@@ -164,15 +164,18 @@ export const schemas = {
     seoDescriptionAr: text,
   }),
   pages: z.object({
-    slug: z.enum([
-      "about",
-      "contact",
-      "shipping",
-      "returns",
-      "privacy",
-      "terms",
-      "faq",
-    ]),
+    slug: slugSchema.refine(
+      (slug) =>
+        ![
+          "products",
+          "categories",
+          "needs",
+          "guide",
+          "cart",
+          "favorites",
+        ].includes(slug),
+      "هذا الرابط محجوز لقسم موجود في الموقع. اختر رابطًا آخر.",
+    ),
     titleTr: text,
     titleAr: text,
     bodyTr: long,

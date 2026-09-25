@@ -1155,6 +1155,22 @@ textarea {
 .category-card img {
   object-fit: cover;
 }
+.category-list-item {
+  min-width: 0;
+}
+.category-list-item > .category-card {
+  display: block;
+}
+.category-parent {
+  display: inline-block;
+  margin-top: 12px;
+  text-decoration: underline;
+}
+.category-description {
+  margin-top: 8px;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
 .category-card h2,
 .category-card h3 {
   font-family: inherit;

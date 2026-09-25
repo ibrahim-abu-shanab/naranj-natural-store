@@ -34,7 +34,8 @@ export function adminError(value: unknown): string {
           allFields.find((f) => f.key === key)?.label ||
           (key === "images" ? "صور المنتج" : "البيانات");
         let reason = "تحقق من القيمة المدخلة.";
-        if (detail.includes("Old price"))
+        if (/^[\u0600-\u06ff]/.test(detail)) reason = detail;
+        else if (detail.includes("Old price"))
           reason = "يجب أن يكون السعر السابق أكبر من السعر الحالي.";
         else if (detail.includes("lowercase"))
           reason = "استخدم أحرفًا لاتينية صغيرة وأرقامًا وشرطات دون مسافات.";

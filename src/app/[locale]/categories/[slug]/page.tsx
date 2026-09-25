@@ -18,10 +18,14 @@ export async function generateMetadata({ params, searchParams }: Props) {
   const { locale, slug } = await params;
   if (!isLocale(locale)) return {};
   const categories = await getCategories();
-  const group = publicCategories.find((category) => category.slug === slug);
   const c = categories.find((category) => category.slug === slug);
+  const group = !c
+    ? publicCategories.find((category) => category.slug === slug)
+    : undefined;
   const source = group
-    ? categories.find((category) => category.slug === group.roots[0])
+    ? categories.find((category) =>
+        group.roots.some((root) => root === category.slug),
+      )
     : c;
   const title = group
     ? publicCategoryName(group, locale)
@@ -47,15 +51,19 @@ export default async function Category({ params, searchParams }: Props) {
   const { locale, slug } = await params;
   if (!isLocale(locale)) notFound();
   const categories = await getCategories();
-  const group = publicCategories.find((category) => category.slug === slug);
   const c = categories.find((c) => c.slug === slug);
+  const group = !c
+    ? publicCategories.find((category) => category.slug === slug)
+    : undefined;
   if (!c && !group) {
     const r = await findRedirect("categories", slug);
     if (r) permanentRedirect(`/${locale}/categories/${r.newSlug}`);
     notFound();
   }
   const source = group
-    ? categories.find((category) => category.slug === group.roots[0])
+    ? categories.find((category) =>
+        group.roots.some((root) => root === category.slug),
+      )
     : c;
   if (!source) notFound();
   const name = group

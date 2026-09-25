@@ -3,8 +3,7 @@ import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useState, useRef, useEffect, useSyncExternalStore } from "react";
 import { Heart, ShoppingBag, Menu, X, ChevronDown, Leaf } from "lucide-react";
-import { dictionary, type Locale } from "@/lib/i18n";
-import { publicCategories, publicCategoryName } from "@/lib/public-categories";
+import { dictionary, localized, type Locale } from "@/lib/i18n";
 import { useStore } from "./store";
 import { LiveSearch } from "./live-search";
 import { BrandLogo } from "./brand-logo";
@@ -138,25 +137,21 @@ export function Header({
           className={`nav category-nav ${open ? "open" : ""}`}
         >
           <div className="container nav-inner">
-            {publicCategories
-              .filter((c) =>
-                categories.some(({ slug }) =>
-                  c.roots.some((root) => root === slug),
-                ),
-              )
+            {categories
+              .filter((c) => !c.parentId)
               .map((c) => (
-              <Link
-                key={c.slug}
-                href={`/${locale}/categories/${c.slug}`}
-                aria-current={
-                  pathname === `/${locale}/categories/${c.slug}`
-                    ? "page"
-                    : undefined
-                }
-                onClick={() => setOpen(false)}
-              >
-                {publicCategoryName(c, locale)}
-              </Link>
+                <Link
+                  key={c.slug}
+                  href={`/${locale}/categories/${c.slug}`}
+                  aria-current={
+                    pathname === `/${locale}/categories/${c.slug}`
+                      ? "page"
+                      : undefined
+                  }
+                  onClick={() => setOpen(false)}
+                >
+                  {localized(c, "name", locale)}
+                </Link>
               ))}
             <Link
               className="mobile-all-products"

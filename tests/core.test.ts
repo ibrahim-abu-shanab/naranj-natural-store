@@ -5,6 +5,9 @@ import { cartSchema, orderMessage, whatsappUrl } from "../src/lib/order";
 import { normalizeSearch, matchesSearch } from "../src/lib/search";
 import { schemas, imageUrl, internalUrl } from "../src/lib/validation";
 import { demoProducts } from "../src/lib/demo";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { InformationalPage } from "../src/components/informational-page";
 import {
   boundedBody,
   boundedJson,
@@ -97,4 +100,72 @@ test("input validation rejects unsafe URLs and malformed settings", () => {
     }).success,
     false,
   );
+});
+
+test("pages accept existing and future slugs but reject storefront route collisions", () => {
+  const content = {
+    titleTr: "Başlık",
+    titleAr: "عنوان",
+    bodyTr: "Metin",
+    bodyAr: "محتوى",
+  };
+  for (const slug of [
+    "about",
+    "contact",
+    "shipping",
+    "returns",
+    "faq",
+    "privacy",
+    "terms",
+    "our-story",
+  ])
+    assert.equal(
+      schemas.pages.safeParse({ ...content, slug }).success,
+      true,
+      slug,
+    );
+  for (const slug of [
+    "products",
+    "categories",
+    "needs",
+    "guide",
+    "cart",
+    "favorites",
+    "../about",
+    "ar/about",
+    "",
+    "About",
+  ])
+    assert.equal(
+      schemas.pages.safeParse({ ...content, slug }).success,
+      false,
+      slug,
+    );
+});
+
+test("informational pages preserve unpaired paragraphs entered by the administrator", () => {
+  for (const slug of [
+    "about",
+    "shipping",
+    "returns",
+    "faq",
+    "privacy",
+    "terms",
+  ] as const) {
+    for (const count of [1, 2, 3, 4, 5]) {
+      const paragraphs = Array.from(
+        { length: count },
+        (_, index) => `Paragraph-${index}-content`,
+      );
+      const html = renderToStaticMarkup(
+        createElement(InformationalPage, {
+          slug,
+          title: "Page title",
+          body: paragraphs.join("\n\n"),
+        }),
+      );
+      for (const paragraph of paragraphs)
+        assert.ok(html.includes(paragraph), `${slug}: ${paragraph}`);
+    }
+  }
 });

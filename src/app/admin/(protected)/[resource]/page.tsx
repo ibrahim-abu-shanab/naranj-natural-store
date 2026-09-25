@@ -34,11 +34,9 @@ export default async function AdminList({
     <>
       <div className="admin-top">
         <h1>{resourceLabels[resource]}</h1>
-        {resource !== "pages" && (
-          <Link className="button" href={`/admin/${resource}/new`}>
-            + إضافة سجل
-          </Link>
-        )}
+        <Link className="button" href={`/admin/${resource}/new`}>
+          + إضافة سجل
+        </Link>
       </div>
       <RecordsTable
         resource={resource}

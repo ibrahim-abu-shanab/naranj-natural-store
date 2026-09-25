@@ -17,7 +17,6 @@ import { Cart } from "@/components/cart";
 import { SavedProducts } from "@/components/saved-products";
 import { SocialLinks } from "@/components/social-links";
 import { InformationalPage } from "@/components/informational-page";
-import { publicCategories, publicCategoryName } from "@/lib/public-categories";
 type Props = { params: Promise<{ locale: string; section: string }> };
 const publicSections = ["categories", "needs", "guide", "cart", "favorites"];
 export async function generateMetadata({ params }: Props) {
@@ -75,30 +74,43 @@ export default async function Section({ params }: Props) {
           <h1>{d.categories}</h1>
         </div>
         <div className="category-grid">
-          {publicCategories.map((category) => {
-            const source = categories.find((item) =>
-              category.roots.some((root) => root === item.slug),
+          {categories.map((category) => {
+            const parent = categories.find(
+              (item) => item.id === category.parentId,
             );
-            if (!source) return null;
             return (
-              <Link
-                className="category-card"
-                href={`/${locale}/categories/${category.slug}`}
-                key={category.slug}
-              >
-                <Image
-                  src={source.image}
-                  alt={publicCategoryName(category, locale)}
-                  fill
-                  sizes="(max-width:760px) 50vw, 25vw"
-                />
-                <div>
-                  <h2 style={{ fontSize: "1.5rem" }}>
-                    {publicCategoryName(category, locale)}
-                  </h2>
-                  <ArrowUpRight />
-                </div>
-              </Link>
+              <article className="category-list-item" key={category.id}>
+                <Link
+                  className="category-card"
+                  href={`/${locale}/categories/${category.slug}`}
+                >
+                  <Image
+                    src={category.image}
+                    alt={localized(category, "name", locale)}
+                    fill
+                    sizes="(max-width:760px) 50vw, 25vw"
+                  />
+                  <div>
+                    <h2 style={{ fontSize: "1.5rem" }}>
+                      {localized(category, "name", locale)}
+                    </h2>
+                    <ArrowUpRight />
+                  </div>
+                </Link>
+                {parent && (
+                  <Link
+                    className="category-parent"
+                    href={`/${locale}/categories/${parent.slug}`}
+                  >
+                    {localized(parent, "name", locale)}
+                  </Link>
+                )}
+                {localized(category, "description", locale) && (
+                  <p className="category-description">
+                    {localized(category, "description", locale)}
+                  </p>
+                )}
+              </article>
             );
           })}
         </div>
@@ -171,12 +183,7 @@ export default async function Section({ params }: Props) {
       <InformationalPage
         slug={
           section as
-            | "about"
-            | "shipping"
-            | "returns"
-            | "faq"
-            | "privacy"
-            | "terms"
+            "about" | "shipping" | "returns" | "faq" | "privacy" | "terms"
         }
         title={localized(page, "title", locale)}
         body={localized(page, "body", locale)}
@@ -190,7 +197,9 @@ export default async function Section({ params }: Props) {
       <div className="page-heading">
         <h1>{localized(page, "title", locale)}</h1>
       </div>
-      <p>{localized(page, "body", locale)}</p>
+      <p style={{ whiteSpace: "pre-line" }}>
+        {localized(page, "body", locale)}
+      </p>
       {settings && (
         <>
           <SocialLinks

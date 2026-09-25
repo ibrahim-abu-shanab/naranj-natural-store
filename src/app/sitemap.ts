@@ -31,7 +31,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       updatedAt: c.updatedAt,
     })),
     ...publicCategories
-      .filter((group) => !categories.some(({ slug }) => slug === group.slug))
+      .filter(
+        (group) =>
+          !categories.some(({ slug }) => slug === group.slug) &&
+          categories.some(({ slug }) =>
+            group.roots.some((root) => root === slug),
+          ),
+      )
       .map((group) => ({
         path: `/categories/${group.slug}`,
         updatedAt: undefined as Date | undefined,
