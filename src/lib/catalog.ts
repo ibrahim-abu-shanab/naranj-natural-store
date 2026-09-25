@@ -1,6 +1,7 @@
 import "server-only";
 import { cache } from "react";
 import { db } from "./db";
+import { withRestoredPages } from "./page-content";
 import {
   demoProducts,
   demoCategories,
@@ -85,7 +86,7 @@ export const getSettings = cache(async () =>
       demoSettings),
 );
 export const getPages = cache(async () =>
-  isDemo() ? demoPages : db().page.findMany(),
+  isDemo() ? demoPages : withRestoredPages(await db().page.findMany()),
 );
 export async function findRedirect(kind: string, slug: string) {
   return isDemo()
