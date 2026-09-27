@@ -3023,3 +3023,8 @@ body {
   .home-category-grid.home-category-grid-detailed { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
   .home-category-grid-detailed .home-category-copy { padding: 10px; }
 }
+
+@media (min-width: 761px) {
+  .category-nav .nav-inner { flex-wrap: wrap; justify-content: center; column-gap: 24px; row-gap: 0; }
+}
+.category-nav a { overflow-wrap: anywhere; }

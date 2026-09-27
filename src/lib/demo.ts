@@ -1,3 +1,4 @@
+import { homeCategories } from "./home-categories";
 const stamp = new Date("2026-01-01T00:00:00Z");
 const emptySeo = {
   seoTitleTr: "",
@@ -27,7 +28,6 @@ const categoryTaxonomy: [string, string, string, string, string | null][] = [
     null,
   ],
   ["shampoos", "sampuanlar", "Şampuanlar", "الشامبو", "hair"],
-  ["hair-serums", "sac-serumlari", "Saç Serumları", "سيرومات الشعر", "hair"],
   ["hair-oils", "sac-yaglari", "Saç Yağları", "زيوت الشعر", "hair"],
   ["hair-conditioners", "sac-kremleri", "Saç Kremleri", "كريمات الشعر", "hair"],
   [
@@ -139,6 +139,14 @@ export const demoCategories = categoryTaxonomy.map(
     descriptionTr: "Günlük bakımınıza eşlik eden özenli bir seçki.",
     descriptionAr: "مجموعة مختارة بعناية لترافق روتينك اليومي.",
     ...timestamps,
+    ...(() => {
+      const category = homeCategories.find((c) => c.slug === slug || c.aliases.includes(slug));
+      return category && !parentId ? {
+        slug: category.slug, nameAr: category.nameAr, nameTr: category.nameTr,
+        descriptionAr: category.descriptionAr, descriptionTr: category.descriptionTr,
+        image: category.image,
+      } : {};
+    })(),
   }),
 );
 export const demoTags = [

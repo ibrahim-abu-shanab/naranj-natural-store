@@ -46,8 +46,7 @@ export default async function Home({ params }: Props) {
   const slides = storefrontSlides;
   const roots = categories.filter((category) => !category.parentId);
   const featuredCategories = homeCategories.map((card) => {
-    const category = roots.find((item) => item.slug === card.slug || item.nameAr === card.nameAr || item.nameTr === card.nameTr)
-      ?? roots.find((item) => card.aliases.includes(item.slug));
+    const category = roots.find((item) => item.slug === card.slug);
     return {
       ...card,
       href: category

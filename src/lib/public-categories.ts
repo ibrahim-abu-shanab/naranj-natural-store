@@ -3,25 +3,25 @@ import type { Locale } from "./i18n";
 export const publicCategories = [
   {
     slug: "hacamat-malzemeleri",
-    nameTr: "Hacamat Malzemeleri",
+    nameTr: "Hacamat ve Malzemeleri",
     nameAr: "الحجامة ومستلزماتها",
     roots: ["hacamat-malzemeleri"],
   },
   {
     slug: "bitkisel-urunler",
-    nameTr: "Bitkisel Ürünler",
-    nameAr: "الخلطات والأعشاب",
+    nameTr: "Bitkiler ve Karışımlar",
+    nameAr: "الأعشاب والخلطات",
     roots: ["bitkisel-urunler", "dogal-yaglar"],
   },
   {
     slug: "bakim-guzellik",
-    nameTr: "Bakım & Güzellik",
-    nameAr: "العناية والجمال",
+    nameTr: "Kozmetik Ürünleri",
+    nameAr: "مستحضرات التجميل",
     roots: ["cilt-bakimi", "kisisel-bakim"],
   },
   {
     slug: "sac-vucut-bakimi",
-    nameTr: "Saç & Vücut Bakımı",
+    nameTr: "Saç ve Vücut Bakımı",
     nameAr: "العناية بالشعر والجسم",
     roots: ["sac-bakimi"],
     exact: ["vucut-bakimi"],
