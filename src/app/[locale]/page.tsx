@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: Props) {
   );
   return {
     ...result,
-    title: { absolute: localized(settings, "seoTitle", locale) },
+    title: { absolute: "NARANJ" },
   };
 }
 

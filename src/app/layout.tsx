@@ -17,7 +17,6 @@ export const metadata: Metadata = {
     process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
   ),
   title: { default: "NARANJ", template: "%s | NARANJ" },
-  icons: { icon: "/favicon.svg" },
   verification: { google: process.env.GOOGLE_SITE_VERIFICATION || undefined },
 };
 export default async function RootLayout({

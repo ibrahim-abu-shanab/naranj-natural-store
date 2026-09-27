@@ -3028,3 +3028,32 @@ body {
   .category-nav .nav-inner { flex-wrap: wrap; justify-content: center; column-gap: 24px; row-gap: 0; }
 }
 .category-nav a { overflow-wrap: anywhere; }
+
+/* Image regions stay square independently of card text at every breakpoint. */
+.product-card .product-photo,
+.category-shelves .product-card:only-child .product-photo,
+.home-category-grid > a .home-category-image,
+.home-category-grid > a:last-child .home-category-image,
+.category-card-image,
+.gallery-main {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  aspect-ratio: 1 / 1;
+  align-self: start;
+  overflow: hidden;
+}
+.product-card .product-photo img { object-fit: contain; }
+.home-category-image img,
+.category-card-image img { object-fit: cover; }
+.category-list-item > .category-card { height: auto; background: #fff; color: #183a2a; }
+.category-list-item > .category-card::after { content: none; }
+.category-list-item > .category-card > div {
+  position: static;
+  padding: 14px;
+  min-height: 62px;
+}
+.category-list-item > .category-card h2 { font-size: 1rem !important; color: inherit; }
+.search-dropdown img { width: 48px; height: auto; aspect-ratio: 1 / 1; flex-shrink: 0; object-fit: contain; }

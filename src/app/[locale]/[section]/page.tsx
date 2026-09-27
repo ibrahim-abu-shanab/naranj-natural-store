@@ -85,12 +85,14 @@ export default async function Section({ params }: Props) {
                   className="category-card"
                   href={`/${locale}/categories/${category.slug}`}
                 >
+                  <span className="category-card-image">
                   <Image
                     src={categoryImage(category)}
                     alt={localized(category, "name", locale)}
                     fill
                     sizes="(max-width:760px) 50vw, 25vw"
                   />
+                  </span>
                   <div>
                     <h2 style={{ fontSize: "1.5rem" }}>
                       {localized(category, "name", locale)}
