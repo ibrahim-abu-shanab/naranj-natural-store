@@ -17,6 +17,7 @@ import { Cart } from "@/components/cart";
 import { SavedProducts } from "@/components/saved-products";
 import { SocialLinks } from "@/components/social-links";
 import { InformationalPage } from "@/components/informational-page";
+import { categoryImage } from "@/lib/storefront-assets";
 type Props = { params: Promise<{ locale: string; section: string }> };
 const publicSections = ["categories", "needs", "guide", "cart", "favorites"];
 export async function generateMetadata({ params }: Props) {
@@ -85,7 +86,7 @@ export default async function Section({ params }: Props) {
                   href={`/${locale}/categories/${category.slug}`}
                 >
                   <Image
-                    src={category.image}
+                    src={categoryImage(category)}
                     alt={localized(category, "name", locale)}
                     fill
                     sizes="(max-width:760px) 50vw, 25vw"

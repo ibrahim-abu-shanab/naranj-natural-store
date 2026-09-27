@@ -95,7 +95,7 @@ export function Hero({ slides, locale }: { slides: Slide[]; locale: Locale }) {
                 src={s.desktopImage}
                 alt=""
                 fill
-                sizes="(max-width: 760px) 100vw, 60vw"
+                sizes="100vw"
                 loading={i === 0 ? "eager" : "lazy"}
                 fetchPriority={i === 0 ? "high" : "auto"}
               />

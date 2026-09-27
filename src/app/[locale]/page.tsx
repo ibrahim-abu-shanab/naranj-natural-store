@@ -9,12 +9,13 @@ import { JsonLd } from "@/components/json-ld";
 import {
   getProducts,
   getCategories,
-  getSlides,
   getSettings,
   getCollections,
 } from "@/lib/catalog";
 import { dictionary, isLocale, localized } from "@/lib/i18n";
 import { metadata, siteUrl } from "@/lib/seo";
+import { homeCategories } from "@/lib/home-categories";
+import { categoryImage, storefrontSlides } from "@/lib/storefront-assets";
 
 type Props = { params: Promise<{ locale: string }> };
 export async function generateMetadata({ params }: Props) {
@@ -37,13 +38,25 @@ export default async function Home({ params }: Props) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
   const d = dictionary[locale];
-  const [products, categories, slides, collections] = await Promise.all([
+  const [products, categories, collections] = await Promise.all([
     getProducts(),
     getCategories(),
-    getSlides(),
     getCollections(),
   ]);
+  const slides = storefrontSlides;
   const roots = categories.filter((category) => !category.parentId);
+  const featuredCategories = homeCategories.map((card) => {
+    const category = roots.find((item) => item.slug === card.slug || item.nameAr === card.nameAr || item.nameTr === card.nameTr)
+      ?? roots.find((item) => card.aliases.includes(item.slug));
+    return {
+      ...card,
+      href: category
+        ? `/${locale}/categories/${category.slug}`
+        : `/${locale}/categories/${card.slug}`,
+      sourceId: category?.id,
+    };
+  });
+  const extraCategories = roots.filter((category) => !featuredCategories.some((card) => card.sourceId === category.id));
   const productRow = (
     title: string,
     selection: typeof products,
@@ -106,8 +119,19 @@ export default async function Home({ params }: Props) {
         <div className="shop-section-heading">
           <h2>{d.exploreCategories}</h2>
         </div>
-        <div className="home-category-grid">
-          {roots.map((category) => {
+        <div className="home-category-grid home-category-grid-detailed">
+          {featuredCategories.map((category) => (
+            <Link href={category.href} key={category.slug}>
+              <span className="home-category-image">
+                <Image src={category.image} alt="" fill sizes="(max-width: 600px) 46vw, (max-width: 1100px) 30vw, 16vw" />
+              </span>
+              <div className="home-category-copy">
+                <h3>{localized(category, "name", locale)}<ArrowUpRight size={16} aria-hidden="true" /></h3>
+                <p>{localized(category, "description", locale)}</p>
+              </div>
+            </Link>
+          ))}
+          {extraCategories.map((category) => {
             return (
               <Link
                 href={`/${locale}/categories/${category.slug}`}
@@ -115,7 +139,7 @@ export default async function Home({ params }: Props) {
               >
                 <span className="home-category-image">
                   <Image
-                    src={category.image}
+                    src={categoryImage(category)}
                     alt=""
                     fill
                     sizes="(max-width: 760px) 45vw, 20vw"
